@@ -1,32 +1,49 @@
 
-  
-  <link rel="stylesheet" href="style.css">
-  <div class="container">
-    <label for="uname"><b>Username</b></label>
-    <input type="text" placeholder="Enter Username" required>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <main class="auth-page">
+      <section class="auth-card">
+        <h1>Login</h1>
 
-    <label for="psw"><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" required>
+        <form class="auth-form">
+          <label for="uname"><b>Username</b></label>
+          <input id="uname" type="text" placeholder="Enter Username" required>
 
-    <button type="submit" id="login-btn">Login</button>
-    <label>
-      <input type="checkbox" checked="checked"> Remember me
-    </label>
-  </div>
+          <label for="psw"><b>Password</b></label>
+          <input id="psw" type="password" placeholder="Enter Password" required>
 
-  <div class="container" style="background-color:#f1f1f1">
-    <button type="button" class="cancelbtn">Cancel</button>
-   
-  </div>
-</form>
+          <button type="submit" id="login-btn">Login</button>
+          <label class="remember">
+            <input type="checkbox" checked="checked"> Remember me
+          </label>
 
-<script>
-  const loginBtn = document.getElementById("login-btn");
+          <div class="auth-actions">
+            <button type="reset" class="cancelbtn">Cancel</button>
+          </div>
+        </form>
 
-  if (loginBtn) {
-    loginBtn.addEventListener("click", (event) => {
-      event.preventDefault();
-      window.location.assign("home.html");
-    });
-  }
-</script>
+        <form action="register.html" method="get" class="secondary-form">
+          <button type="submit" class="registerbtn">Not registered yet</button>
+        </form>
+      </section>
+    </main>
+
+    <script>
+      const loginBtn = document.getElementById("login-btn");
+
+      if (loginBtn) {
+        loginBtn.addEventListener("click", (event) => {
+          event.preventDefault();
+          window.location.assign("home.html");
+        });
+      }
+    </script>
+  </body>
+</html>

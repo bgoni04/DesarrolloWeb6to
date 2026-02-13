@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <main class="auth-page">
+      <section class="auth-card">
+        <h1>Create Account</h1>
+
+        <form class="auth-form">
+          <label for="reg-username"><b>Username</b></label>
+          <input type="text" id="reg-username" placeholder="Choose a username" required>
+
+          <label for="reg-email"><b>Email</b></label>
+          <input type="email" id="reg-email" placeholder="Enter your email" required>
+
+          <label for="reg-password"><b>Password</b></label>
+          <input type="password" id="reg-password" placeholder="Create a password" required>
+
+          <label for="reg-confirm"><b>Confirm Password</b></label>
+          <input type="password" id="reg-confirm" placeholder="Repeat your password" required>
+
+          <button type="submit">Register</button>
+        </form>
+
+        <form action="index.html" method="get" class="secondary-form">
+          <button type="submit" class="registerbtn">Back to login</button>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>
