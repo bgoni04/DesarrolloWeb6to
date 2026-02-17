@@ -138,6 +138,11 @@ body {
   font-size: 16px;
 }
 
+.home-actions {
+  max-width: 220px;
+  margin-bottom: 24px;
+}
+
 .image-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
