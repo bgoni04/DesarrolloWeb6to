@@ -51,5 +51,38 @@
         <span>All rights reserved</span>
       </div>
     </footer>
+
+    <script>
+      const registerForm = document.querySelector(".auth-form");
+
+      if (registerForm) {
+        registerForm.addEventListener("submit", (event) => {
+          event.preventDefault();
+
+          const username = document.getElementById("reg-username").value.trim();
+          const email = document.getElementById("reg-email").value.trim();
+          const password = document.getElementById("reg-password").value;
+          const confirmPassword = document.getElementById("reg-confirm").value;
+
+          if (password !== confirmPassword) {
+            alert("Passwords do not match.");
+            return;
+          }
+
+          const userData = {
+            username,
+            email,
+            password,
+          };
+
+          const usersRaw = localStorage.getItem("users");
+          const users = usersRaw ? JSON.parse(usersRaw) : [];
+          users.push(userData);
+          localStorage.setItem("users", JSON.stringify(users));
+          alert("Registration successful. You can now log in.");
+          window.location.assign("index.html");
+        });
+      }
+    </script>
   </body>
 </html>

@@ -36,12 +36,33 @@
     </main>
 
     <script>
-      const loginBtn = document.getElementById("login-btn");
+      const loginForm = document.querySelector(".auth-form");
 
-      if (loginBtn) {
-        loginBtn.addEventListener("click", (event) => {
+      if (loginForm) {
+        loginForm.addEventListener("submit", (event) => {
           event.preventDefault();
-          window.location.assign("home.html");
+
+          const username = document.getElementById("uname").value.trim();
+          const password = document.getElementById("psw").value;
+          const usersRaw = localStorage.getItem("users");
+
+          if (!usersRaw) {
+            alert("No registered user found. Please create an account first.");
+            window.location.assign("register.html");
+            return;
+          }
+
+          const users = JSON.parse(usersRaw);
+          const matchedUser = users.find(
+            (user) => user.username === username && user.password === password
+          );
+
+          if (matchedUser) {
+            window.location.assign("home.html");
+            return;
+          }
+
+          alert("Invalid username or password.");
         });
       }
     </script>
