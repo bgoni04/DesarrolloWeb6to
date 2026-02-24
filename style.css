@@ -63,7 +63,7 @@ body {
 }
 
 .auth-page {
-  min-height: 100vh;
+  min-height: calc(100vh - 132px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -218,6 +218,10 @@ body {
   text-decoration: none;
   color: #1f1f1f;
   font-weight: 600;
+}
+
+.site-nav a.active {
+  color: #1f6feb;
 }
 
 .site-nav a:hover {

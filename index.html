@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
+    <div id="app-header"></div>
+
     <main class="auth-page">
       <section class="auth-card">
         <h1>Login</h1>
@@ -35,7 +37,17 @@
       </section>
     </main>
 
+    <div id="app-footer"></div>
+
+    <script src="auth.js"></script>
+    <script src="layout.js"></script>
+
     <script>
+      Layout.mountLayout({
+        activePage: "login",
+        guestOnly: true,
+      });
+
       const loginForm = document.querySelector(".auth-form");
 
       if (loginForm) {
@@ -44,20 +56,26 @@
 
           const username = document.getElementById("uname").value.trim();
           const password = document.getElementById("psw").value;
-          const usersRaw = localStorage.getItem("users");
 
-          if (!usersRaw) {
+          if (!username || !password) {
+            alert("Username and password are required.");
+            return;
+          }
+
+          const users = Auth.getUsers();
+
+          if (!users.length) {
             alert("No registered user found. Please create an account first.");
             window.location.assign("register.html");
             return;
           }
 
-          const users = JSON.parse(usersRaw);
           const matchedUser = users.find(
             (user) => user.username === username && user.password === password
           );
 
           if (matchedUser) {
+            Auth.createSession(matchedUser);
             window.location.assign("home.html");
             return;
           }
