@@ -94,6 +94,23 @@
 
     return { session, user };
   }
+//IMAGEN
+  const pokemonImageElement = document.getElementById("pokemon-img");
+  const pokemonNameElement = document.getElementById("nombre");
+
+  if (pokemonImageElement && pokemonNameElement) {
+    fetch("https://pokeapi.co/api/v2/pokemon/pikachu")
+      .then((response) => response.json())
+      .then((data) => {
+        const imageUrl = data.sprites.front_default;
+        pokemonImageElement.src = imageUrl;
+        pokemonNameElement.textContent = data.name;
+      })
+      .catch((error) => {
+        pokemonNameElement.textContent = "Pikachu";
+        console.error(error);
+      });
+  }
 
   window.Auth = {
     getUsers,
