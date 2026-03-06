@@ -94,22 +94,114 @@
 
     return { session, user };
   }
-//IMAGEN
-  const pokemonImageElement = document.getElementById("pokemon-img");
-  const pokemonNameElement = document.getElementById("nombre");
+  const pokemonGridElement = document.getElementById("pokemon-grid");
+  const pokemonStatusElement = document.getElementById("pokemon-status");
+  const pokemonPageLabelElement = document.getElementById("pokemon-page-label");
+  const pokemonPrevButton = document.getElementById("pokemon-prev");
+  const pokemonNextButton = document.getElementById("pokemon-next");
+  const POKEMON_LIMIT = 16;
+  let pokemonPageIndex = 0;
 
-  if (pokemonImageElement && pokemonNameElement) {
-    fetch("https://pokeapi.co/api/v2/pokemon/pikachu")
-      .then((response) => response.json())
-      .then((data) => {
-        const imageUrl = data.sprites.front_default;
-        pokemonImageElement.src = imageUrl;
-        pokemonNameElement.textContent = data.name;
-      })
-      .catch((error) => {
-        pokemonNameElement.textContent = "Pikachu";
-        console.error(error);
+  function getStatValue(pokemon, statName) {
+    const stat = pokemon.stats.find((item) => item.stat && item.stat.name === statName);
+    return stat ? stat.base_stat : 0;
+  }
+
+  function createPokemonCard(pokemon) {
+    const article = document.createElement("article");
+    article.className = "pokemon-card";
+
+    const imageUrl =
+      pokemon.sprites.other["official-artwork"].front_default ||
+      pokemon.sprites.front_default ||
+      "";
+
+    const types = pokemon.types
+      .map((typeItem) => typeItem.type.name)
+      .join(" • ");
+
+    const power =
+      getStatValue(pokemon, "hp") +
+      getStatValue(pokemon, "attack") +
+      getStatValue(pokemon, "defense") +
+      getStatValue(pokemon, "speed");
+
+    article.innerHTML = `
+      <img src="${imageUrl}" alt="${pokemon.name}" class="pokemon-img" />
+      <h3>${pokemon.name}</h3>
+      <p class="pokemon-type">${types}</p>
+      <ul class="pokemon-stats">
+        <li><span>Power</span><strong>${power}</strong></li>
+        <li><span>HP</span><strong>${getStatValue(pokemon, "hp")}</strong></li>
+        <li><span>Attack</span><strong>${getStatValue(pokemon, "attack")}</strong></li>
+        <li><span>Defense</span><strong>${getStatValue(pokemon, "defense")}</strong></li>
+        <li><span>Speed</span><strong>${getStatValue(pokemon, "speed")}</strong></li>
+        <li><span>Weight</span><strong>${pokemon.weight}</strong></li>
+      </ul>
+    `;
+
+    return article;
+  }
+
+  function updatePokemonControls() {
+    if (pokemonPageLabelElement) {
+      pokemonPageLabelElement.textContent = `Index ${pokemonPageIndex + 1}`;
+    }
+
+    if (pokemonPrevButton) {
+      pokemonPrevButton.disabled = pokemonPageIndex === 0;
+    }
+  }
+
+  async function loadPokemonPage() {
+    if (!pokemonGridElement || !pokemonStatusElement) {
+      return;
+    }
+
+    pokemonStatusElement.textContent = "Loading Pokémon...";
+    pokemonGridElement.innerHTML = "";
+    updatePokemonControls();
+
+    const offset = pokemonPageIndex * POKEMON_LIMIT;
+
+    try {
+      const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${POKEMON_LIMIT}&offset=${offset}`);
+      const listData = await response.json();
+
+      const detailResponses = await Promise.all(
+        listData.results.map((pokemonItem) => fetch(pokemonItem.url).then((result) => result.json()))
+      );
+
+      detailResponses.forEach((pokemon) => {
+        pokemonGridElement.appendChild(createPokemonCard(pokemon));
       });
+
+      pokemonStatusElement.textContent = `Showing ${detailResponses.length} Pokémon`;
+      updatePokemonControls();
+    } catch (error) {
+      pokemonStatusElement.textContent = "Unable to load Pokémon right now.";
+      console.error(error);
+    }
+  }
+
+  if (pokemonGridElement && pokemonStatusElement) {
+    if (pokemonPrevButton) {
+      pokemonPrevButton.addEventListener("click", () => {
+        if (pokemonPageIndex > 0) {
+          pokemonPageIndex -= 1;
+          loadPokemonPage();
+        }
+      });
+    }
+
+    if (pokemonNextButton) {
+      pokemonNextButton.addEventListener("click", () => {
+        pokemonPageIndex += 1;
+        loadPokemonPage();
+      });
+    }
+
+    loadPokemonPage();
   }
 
   window.Auth = {

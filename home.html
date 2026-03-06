@@ -11,10 +11,10 @@
 
 		<main class="landing">
 			<section class="hero">
-				<img src="teclogo.png" alt="Tec De Monterrey" class="rounded-rectangle">
+				<img src="pokelogo.png" alt="Logo Pokemon" class="rounded-rectangle">
 				<div>
-					<h1>Welcome</h1>
-					<p>Explore the latest updates, events, and highlights.</p>
+					<h1>Desarrollo Web</h1>
+					<p>Pokedex Bruno Arturo Goñi Flores.</p>
 				</div>
 			</section>
 
@@ -22,26 +22,17 @@
 				<button type="submit" class="registerbtn">Back to login</button>
 			</form>
 
-			<section class="image-grid">
-				<div class="image-slot">Image 1</div>
-				<div class="image-slot">Image 2</div>
-				<div class="image-slot">Image 3</div>
-				<div class="image-slot">Image 4</div>
-				<div class="image-slot">Image 5</div>
-				<div class="pokemon-card">
-					<img id="pokemon-img" alt="Pokemon sprite" />
-					<h2 id="nombre">Loading...</h2>
+			<section class="pokemon-section">
+				<div class="pokemon-toolbar">
+					<h2>Pokémon Index</h2>
+					<div class="pokemon-controls">
+						<button id="pokemon-prev" type="button" class="registerbtn">Previous</button>
+						<span id="pokemon-page-label">Index 1</span>
+						<button id="pokemon-next" type="button">Next</button>
+					</div>
 				</div>
-			</section>
-
-			<section class="feature-row">
-				<div class="feature">
-					<div class="image-slot">Banner</div>
-				</div>
-				<div class="feature">
-					<h2>Featured</h2>
-					<p>Daily updates and themed highlights in a single dark-styled dashboard.</p>
-				</div>
+				<p id="pokemon-status" class="pokemon-status">Loading Pokémon...</p>
+				<div id="pokemon-grid" class="pokemon-grid"></div>
 			</section>
 		</main>
 
