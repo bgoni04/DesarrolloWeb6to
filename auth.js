@@ -99,8 +99,13 @@
   const pokemonPageLabelElement = document.getElementById("pokemon-page-label");
   const pokemonPrevButton = document.getElementById("pokemon-prev");
   const pokemonNextButton = document.getElementById("pokemon-next");
+  const pokemonTypeFilterElement = document.getElementById("pokemon-type-filter");
   const POKEMON_LIMIT = 16;
   let pokemonPageIndex = 0;
+  let selectedPokemonType = "all";
+  let hasNextPokemonPage = true;
+  let pokemonLoading = false;
+  const pokemonByTypeCache = new Map();
 
   function getStatValue(pokemon, statName) {
     const stat = pokemon.stats.find((item) => item.stat && item.stat.name === statName);
@@ -149,7 +154,36 @@
     }
 
     if (pokemonPrevButton) {
-      pokemonPrevButton.disabled = pokemonPageIndex === 0;
+      pokemonPrevButton.disabled = pokemonPageIndex === 0 || pokemonLoading;
+    }
+
+    if (pokemonNextButton) {
+      pokemonNextButton.disabled = !hasNextPokemonPage || pokemonLoading;
+    }
+  }
+
+  function getPokemonNameFromUrl(url) {
+    const segments = url.split("/").filter(Boolean);
+    return segments[segments.length - 1] || "";
+  }
+
+  async function loadPokemonTypes() {
+    if (!pokemonTypeFilterElement) {
+      return;
+    }
+
+    try {
+      const response = await fetch("https://pokeapi.co/api/v2/type");
+      const data = await response.json();
+
+      data.results.forEach((typeItem) => {
+        const option = document.createElement("option");
+        option.value = typeItem.name;
+        option.textContent = typeItem.name;
+        pokemonTypeFilterElement.appendChild(option);
+      });
+    } catch (error) {
+      console.error(error);
     }
   }
 
@@ -158,6 +192,7 @@
       return;
     }
 
+    pokemonLoading = true;
     pokemonStatusElement.textContent = "Loading Pokémon...";
     pokemonGridElement.innerHTML = "";
     updatePokemonControls();
@@ -165,21 +200,56 @@
     const offset = pokemonPageIndex * POKEMON_LIMIT;
 
     try {
-      const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${POKEMON_LIMIT}&offset=${offset}`);
-      const listData = await response.json();
+      let pokemonNames = [];
+
+      if (selectedPokemonType === "all") {
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${POKEMON_LIMIT}&offset=${offset}`);
+        const listData = await response.json();
+        pokemonNames = listData.results.map((pokemonItem) => pokemonItem.name);
+        hasNextPokemonPage = Boolean(listData.next);
+      } else {
+        let filteredNames = pokemonByTypeCache.get(selectedPokemonType);
+
+        if (!filteredNames) {
+          const response = await fetch(`https://pokeapi.co/api/v2/type/${selectedPokemonType}`);
+          const typeData = await response.json();
+          filteredNames = typeData.pokemon.map((entry) => {
+            if (entry.pokemon.name) {
+              return entry.pokemon.name;
+            }
+
+            return getPokemonNameFromUrl(entry.pokemon.url);
+          });
+          pokemonByTypeCache.set(selectedPokemonType, filteredNames);
+        }
+
+        pokemonNames = filteredNames.slice(offset, offset + POKEMON_LIMIT);
+        hasNextPokemonPage = offset + POKEMON_LIMIT < filteredNames.length;
+      }
 
       const detailResponses = await Promise.all(
-        listData.results.map((pokemonItem) => fetch(pokemonItem.url).then((result) => result.json()))
+        pokemonNames.map((pokemonName) => fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`).then((result) => result.json()))
       );
 
       detailResponses.forEach((pokemon) => {
         pokemonGridElement.appendChild(createPokemonCard(pokemon));
       });
 
-      pokemonStatusElement.textContent = `Showing ${detailResponses.length} Pokémon`;
+      if (!detailResponses.length) {
+        pokemonStatusElement.textContent = "No Pokémon found for this type.";
+      } else if (selectedPokemonType === "all") {
+        pokemonStatusElement.textContent = `Showing ${detailResponses.length} Pokémon`;
+      } else {
+        pokemonStatusElement.textContent = `Showing ${detailResponses.length} Pokémon of type ${selectedPokemonType}`;
+      }
+
+      pokemonLoading = false;
       updatePokemonControls();
     } catch (error) {
       pokemonStatusElement.textContent = "Unable to load Pokémon right now.";
+      hasNextPokemonPage = false;
+      pokemonLoading = false;
+      updatePokemonControls();
       console.error(error);
     }
   }
@@ -196,9 +266,21 @@
 
     if (pokemonNextButton) {
       pokemonNextButton.addEventListener("click", () => {
-        pokemonPageIndex += 1;
+        if (hasNextPokemonPage) {
+          pokemonPageIndex += 1;
+          loadPokemonPage();
+        }
+      });
+    }
+
+    if (pokemonTypeFilterElement) {
+      pokemonTypeFilterElement.addEventListener("change", (event) => {
+        selectedPokemonType = event.target.value;
+        pokemonPageIndex = 0;
         loadPokemonPage();
       });
+
+      loadPokemonTypes();
     }
 
     loadPokemonPage();

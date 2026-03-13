@@ -197,6 +197,7 @@ button:hover {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  flex-wrap: wrap;
   margin-bottom: 8px;
 }
 
@@ -209,6 +210,22 @@ button:hover {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.pokemon-type-filter {
+  min-width: 160px;
+  width: auto;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-soft);
+  color: var(--text);
+}
+
+.pokemon-type-filter:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(124, 140, 255, 0.25);
 }
 
 .pokemon-controls button {
@@ -231,6 +248,138 @@ button:hover {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   gap: 14px;
+}
+
+.battle-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 18px;
+}
+
+.battle-toolbar h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.battle-toolbar p {
+  margin: 8px 0 16px;
+  color: var(--text-muted);
+}
+
+.battle-selectors {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.battle-picker label {
+  display: block;
+  margin-bottom: 6px;
+  color: #d7deff;
+  font-size: 14px;
+}
+
+.battle-actions {
+  margin: 10px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.battle-actions button {
+  margin: 0;
+}
+
+.battle-stage {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.battle-card {
+  background: linear-gradient(160deg, #1a2342, #111a31);
+  border: 1px solid #40538d;
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.battle-pokemon-img {
+  display: block;
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  margin: 0 auto 8px;
+}
+
+.battle-card h3 {
+  margin: 0;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.battle-meta {
+  margin: 8px 0;
+  color: var(--text-muted);
+  text-align: center;
+  font-size: 14px;
+}
+
+.battle-health-bar {
+  width: 100%;
+  height: 10px;
+  background: #0d1324;
+  border: 1px solid #2b3f75;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.battle-health-value {
+  height: 100%;
+  background: linear-gradient(90deg, #56d364, #2ebd8a);
+}
+
+.battle-log {
+  margin: 16px 0 0;
+  padding: 14px 14px 14px 36px;
+  max-height: 280px;
+  overflow-y: auto;
+  background: rgba(124, 140, 255, 0.08);
+  border: 1px solid rgba(124, 140, 255, 0.3);
+  border-radius: 14px;
+}
+
+.battle-log li {
+  margin-bottom: 8px;
+  color: #e5eaff;
+}
+
+.battle-winner {
+  margin-top: 16px;
+  text-align: center;
+  min-height: 20px;
+}
+
+.winner-title {
+  margin: 0 0 8px;
+  font-size: 28px;
+}
+
+.winner-image {
+  width: 170px;
+  height: 170px;
+  object-fit: contain;
+  background: linear-gradient(140deg, #1f2640, #171d30);
+  border: 1px solid #40538d;
+  border-radius: 16px;
+  padding: 10px;
+}
+
+.winner-name {
+  margin: 8px 0 0;
+  text-transform: capitalize;
+  font-size: 20px;
 }
 
 .image-slot {
@@ -411,5 +560,13 @@ button:disabled {
   .site-footer__inner {
     flex-direction: column;
     gap: 8px;
+  }
+
+  .battle-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .battle-stage {
+    grid-template-columns: 1fr;
   }
 }

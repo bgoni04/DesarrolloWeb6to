@@ -25,6 +25,9 @@
 			<section class="pokemon-section">
 				<div class="pokemon-toolbar">
 					<h2>Pokémon Index</h2>
+					<select id="pokemon-type-filter" class="pokemon-type-filter" aria-label="Filter Pokémon by type">
+						<option value="all">All types</option>
+					</select>
 					<div class="pokemon-controls">
 						<button id="pokemon-prev" type="button" class="registerbtn">Previous</button>
 						<span id="pokemon-page-label">Index 1</span>
@@ -34,12 +37,45 @@
 				<p id="pokemon-status" class="pokemon-status">Loading Pokémon...</p>
 				<div id="pokemon-grid" class="pokemon-grid"></div>
 			</section>
+
+			<section class="battle-section">
+				<div class="battle-toolbar">
+					<h2>Battle Arena</h2>
+					<p>Elige dos Pokemon y avanza la pelea turno por turno.</p>
+				</div>
+
+				<div class="battle-selectors">
+					<div class="battle-picker">
+						<label for="pokemon-one-input">Pokemon 1</label>
+						<input id="pokemon-one-input" list="pokemon-name-options" type="text" placeholder="Ej. pikachu o 25">
+					</div>
+					<div class="battle-picker">
+						<label for="pokemon-two-input">Pokemon 2</label>
+						<input id="pokemon-two-input" list="pokemon-name-options" type="text" placeholder="Ej. charizard o 6">
+					</div>
+				</div>
+
+				<datalist id="pokemon-name-options"></datalist>
+
+				<div class="battle-actions">
+					<button id="battle-load-btn" type="button">Cargar Pokemon</button>
+					<button id="battle-next-turn-btn" type="button" disabled>Siguiente turno</button>
+					<button id="battle-reset-btn" type="button" class="registerbtn" disabled>Reiniciar batalla</button>
+				</div>
+
+				<p id="battle-status" class="pokemon-status">Selecciona dos Pokemon para comenzar.</p>
+
+				<div id="battle-stage" class="battle-stage"></div>
+				<ol id="battle-log" class="battle-log"></ol>
+				<div id="battle-winner" class="battle-winner"></div>
+			</section>
 		</main>
 
 		<div id="app-footer"></div>
 
 		<script src="auth.js"></script>
 		<script src="layout.js"></script>
+		<script src="battle.js"></script>
 		<script>
 			Layout.mountLayout({
 				activePage: "home",
